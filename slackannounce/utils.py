@@ -2,9 +2,12 @@
 # encoding: utf-8
 
 from __future__ import print_function, unicode_literals, absolute_import
+import sys
+import os.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import json
 import requests
-from mini_bot.slack_tools import slack_config
+from slackannounce import config
 
 
 class SlackException(Exception):
@@ -21,7 +24,7 @@ class SlackSender(object):
         self._set_debug_state()
         self._room = self._set_room()
         self._webhook_url = self._set_webhook()
-        self._user = slack_config.DEFAULT_SLACK_USER
+        self._user = config.DEFAULT_SLACK_USER
         self.json_attachments = json_attachments
         self._json_attachments = self._set_json_attachments()
         self._json_payload = {}
@@ -47,11 +50,11 @@ class SlackSender(object):
 
     def _set_room(self):
         if self.debug:
-            room = slack_config.DEBUG_SLACK_ROOM
+            room = config.DEBUG_SLACK_ROOM
         elif self.room:
             room = self.room
         else:
-            room = slack_config.DEFAULT_SLACK_ROOM
+            room = config.DEFAULT_SLACK_ROOM
 
         return room
 
@@ -65,10 +68,10 @@ class SlackSender(object):
 
     def _set_webhook(self):
         if self.room == 'me':
-            webhook_url = slack_config.SLACK_WEBHOOK_URL_ME
+            webhook_url = config.SLACK_WEBHOOK_URL_ME
             self._room = None
         else:
-            webhook_url = slack_config.SLACK_WEBHOOK_URL
+            webhook_url = config.SLACK_WEBHOOK_URL
             hash_check = list(self._room)[0]
 
             if hash_check != '#':
@@ -88,7 +91,7 @@ class SlackSender(object):
         Returns:
             - json(self.json_attachments): The formatted json set in the object
         """
-        title = kwargs.get('title', slack_config.DEFAULT_TITLE)
+        title = kwargs.get('title', config.DEFAULT_TITLE)
         color = kwargs.get('color', self.color)
         fallback = kwargs.get('fallback', None)
 

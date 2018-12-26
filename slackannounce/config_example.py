@@ -1,7 +1,7 @@
 """
 This is a config file for holding keys, tokens, webhooks, and other private
 info. This file will be in your .gitignore file once renamed.
-You MUST rename this file to config.py in order for utilities.py to function.
+You MUST rename this file to config.py in order for slackAnnounce to function.
 """
 
 # Slack Config:
