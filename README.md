@@ -4,8 +4,12 @@ Tools for sending messages to a Slack channel via the Slack API. Created for my 
 ## slackAnnounce.py  
 
 *Description:*
+This is an example script for using slacksenderutils to send notification messages to Slack via webhooks. Send arbitrary messages as your bot user, send expected downtime, or server up notifications.
 
-This script is for sending notification messages to Slack via webhooks. Send arbitrary messages as your bot user, send expected downtime, or server up notifications.
+## slackutils.py  
+
+*Description:*
+This contains a wrapper class for building json payloads to send messages to Slack as well as a few basica utility functions.  
 
 
 Before this will work, you will need to do the following…
@@ -34,4 +38,4 @@ Before this will work, you will need to do the following…
 `  -d, --debug`  _Enable debug mode. Send message to test channel and show json output in console._  
 `  --dry`  _Enable dryrun mode. Message will not be sent._  
 `  -r, --room <room>`  _Slack channel room to send the message to._  
-`  -t, --title <title>`  _Set a message title._
+`  -_t, --title <title>`  _Set a message title._

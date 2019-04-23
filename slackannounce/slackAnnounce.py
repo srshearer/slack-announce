@@ -7,7 +7,7 @@ import os.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import argparse
 from slackannounce import config
-from slackannounce import utils
+from slackannounce import slackutils
 
 
 def parse_arguments():
@@ -27,7 +27,7 @@ def parse_arguments():
     parser.add_argument('-m', '--message', dest='message', metavar='<message>',
                         default=None, required=True, action='store',
                         help='The message to send to the channel.')
-    parser.add_argument('-r', '--room', dest='room', metavar='<room>',
+    parser.add_argument('-r', '--channel', dest='channel', metavar='<channel>',
                         default=None, required=False, action='store',
                         help='Slack channel room to send the message to.')
     parser.add_argument('-t', '--title', dest='title', metavar='<title>',
@@ -43,28 +43,28 @@ def set_message(args, **kwargs):
     _color = args.color or kwargs.get('color') or None
 
     if not args.message:
-        raise utils.SlackException('No message given: {}'.format(args))
+        raise slackutils.SlackException('No message given: {}'.format(args))
 
     if args.message.startswith('up'):
         title = 'Announcement: Server is up'
         message = 'The server is back up!'
-        color = utils.text_color('good')
+        color = slackutils.text_color('good')
     elif args.message.startswith('down '):
         downtime = ' '.join(args.message.split(' ')[1:])
         title = 'Announcement: Server going down'
         message = 'The server is going down for maintenance.\n' \
                   'Exepected downtime is about {}.'.format(downtime)
-        color = utils.text_color('warn')
+        color = slackutils.text_color('warn')
     elif _message.startswith('serverupdate'):
         _m_list = _message.split(" ")
         software = _m_list[1]
         title = '{} Update Available'.format(software)
         message = ' '.join(_m_list[2:]).replace("\\n", "\n")
-        color = utils.text_color('blue')
+        color = slackutils.text_color('blue')
     else:
         title = args.title or config.DEFAULT_TITLE
         message = args.message
-        color = args.color or utils.text_color('info')
+        color = args.color or slackutils.text_color('info')
 
     json_attachments = {
         "fallback": title,
@@ -76,11 +76,35 @@ def set_message(args, **kwargs):
     return json_attachments
 
 
+def set_channel_and_webhook_url(args):
+    if args.channel == 'me':
+        webhook_url = config.SLACK_WEBHOOK_URL_ME
+        channel = None
+    elif args.debug:
+        webhook_url = config.SLACK_WEBHOOK_URL
+        channel = config.DEBUG_SLACK_ROOM
+    else:
+        webhook_url = config.SLACK_WEBHOOK_URL
+        channel = config.DEFAULT_SLACK_ROOM
+
+    if channel:
+        if list(channel)[0] != '#':
+            channel = '#' + channel
+
+    return channel, webhook_url
+
+
 def send_slack_message(args):
     json = set_message(args)
-    slack = utils.SlackSender(
-        json_attachments=json, room=args.room,
-        debug=args.debug, dryrun=args.dryrun)
+    channel, webhook_url = set_channel_and_webhook_url(args)
+    slack = slackutils.SlackSender(
+        webhook_url=webhook_url,
+        channel=channel,
+        user=config.DEFAULT_SLACK_USER,
+        json_attachments=json,
+        debug=args.debug,
+        dryrun=args.dryrun
+    )
     slack.send()
 
 
