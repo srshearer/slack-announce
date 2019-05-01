@@ -77,6 +77,9 @@ def set_message(args, **kwargs):
 
 
 def set_channel_and_webhook_url(args):
+    if args.dryrun:
+        args.debug = True
+
     if args.channel == 'me':
         webhook_url = config.SLACK_WEBHOOK_URL_ME
         channel = None
