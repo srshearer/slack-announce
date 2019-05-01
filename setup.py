@@ -5,12 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="slackannounce",
-    version="0.0.1",
+    version="1.0.0",
     author='Steven Shearer',
     author_email='srshearer@gmail.com',
     description='Tools for sending notification messages as a Slack bot user',
     install_requires=[
         'argparse',
+        'requests',
     ],
     license='MIT',
     long_description=long_description,
