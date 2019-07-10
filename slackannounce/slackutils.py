@@ -88,28 +88,33 @@ class SlackSender(object):
         return response
 
 
+def enum(**enums):
+    """Defined enums type for convenience."""
+    return type(str('Enum'), (), enums)
+
+
 def text_color(requested_color):
     """Takes a color alias (str) and returns the color value if available"""
-    colors = {
-        'grey': '#d3d3d3',
-        'green': 'good',
-        'orange': 'warning',
-        'red': 'danger',
-        'purple': '#764FA5',
-        'blue': '#439FE0'
-    }
+    _colors = enum(
+        grey='#d3d3d3',
+        green='good',
+        orange='warning',
+        red='danger',
+        purple='#764FA5',
+        blue='#439FE0',
+    )
 
     text_color_dict = {
-        'default': colors['grey'],
-        'info': colors['grey'],
-        'good': colors['green'],
-        'green': colors['green'],
-        'warn': colors['orange'],
-        'orange': colors['orange'],
-        'danger': colors['red'],
-        'red': colors['red'],
-        'purple': colors['purple'],
-        'blue': colors['blue'],
+        'default': _colors.grey,
+        'info': _colors.grey,
+        'good': _colors.green,
+        'green': _colors.green,
+        'warn': _colors.orange,
+        'orange': _colors.orange,
+        'danger': _colors.red,
+        'red': _colors.red,
+        'purple': _colors.purple,
+        'blue': _colors.blue,
     }
 
     if requested_color.lower() in map(unicode.lower, text_color_dict):
