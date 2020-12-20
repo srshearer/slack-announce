@@ -1,6 +1,4 @@
-#!/usr/bin/python -u
-# encoding: utf-8
-from __future__ import print_function, unicode_literals, absolute_import
+#!/usr/bin/env python3
 import json
 import requests
 
@@ -117,7 +115,7 @@ def text_color(requested_color):
         'blue': _colors.blue,
     }
 
-    if requested_color.lower() in map(unicode.lower, text_color_dict):
+    if requested_color.lower() in map(str.lower, text_color_dict):
         return_color = text_color_dict[requested_color]
     else:
         print('ERROR - Invalid color: {}'.format(requested_color))
