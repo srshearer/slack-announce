@@ -4,9 +4,24 @@ import requests
 from dataclasses import dataclass
 
 
+@dataclass(frozen=True)
+class TextColors:
+    grey = "#d3d3d3"
+    green = "good"
+    orange = "warning"
+    red = "danger"
+    purple = "#764FA5"
+    blue = "#439FE0"
+
+    default = grey
+    info = grey
+    good = green
+    warning = orange
+    danger = red
+
+
 class SlackException(Exception):
     """Custom exception for Slack related failures."""
-
     pass
 
 
@@ -91,55 +106,3 @@ class SlackSender(object):
         print(f"Result: [{response.status_code}] {response.text}")
 
         return response
-
-
-@dataclass
-class TextColors:
-    grey = "#d3d3d3"
-    green = "good"
-    orange = "warning"
-    red = "danger"
-    purple = "#764FA5"
-    blue = "#439FE0"
-
-    default = grey
-    info = grey
-    good = green
-    warn = orange
-    warning = orange
-    orange = orange
-    danger = red
-    red = red
-    purple = purple
-
-
-def text_color(requested_color):
-    """Takes a color alias (str) and returns the color value if available"""
-
-    print(
-        "WARNING: This funtion is deprecated and will be removed soon! "
-        "Please use TextColors dataclass instead of text_color() function!"
-    )
-
-    text_color_dict = {
-        "default": TextColors.grey,
-        "info": TextColors.grey,
-        "good": TextColors.green,
-        "green": TextColors.green,
-        "warn": TextColors.orange,
-        "orange": TextColors.orange,
-        "danger": TextColors.red,
-        "red": TextColors.red,
-        "purple": TextColors.purple,
-        "blue": TextColors.blue,
-    }
-
-    if requested_color.lower() in map(str.lower, text_color_dict):
-        return_color = text_color_dict[requested_color]
-    else:
-        print(f"ERROR - Invalid color: {requested_color}")
-        print(f"Available colors: {list(text_color_dict)}")
-        return_color = text_color_dict["default"]
-        print(f"Returning default color: {return_color}")
-
-    return return_color
