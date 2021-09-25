@@ -71,8 +71,7 @@ def parse_arguments():
         action="store",
         help="Set a message title.",
     )
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 def set_message(args, **kwargs):
@@ -80,7 +79,7 @@ def set_message(args, **kwargs):
     _title = args.title or kwargs.get("title") or None
     _color = args.color or kwargs.get("color") or None
 
-    if not args.message:
+    if args.message is None:
         raise slackutils.SlackException(f"No message given: {args}")
 
     if args.message.startswith("up"):
@@ -94,7 +93,7 @@ def set_message(args, **kwargs):
             "The server is going down for maintenance.\n"
             f"Exepected downtime is about {downtime}."
         )
-        color = slackutils.TextColors.warn
+        color = slackutils.TextColors.warning
     elif _message.startswith("serverupdate"):
         _m_list = _message.split(" ")
         software = _m_list[1]
@@ -121,18 +120,17 @@ def set_channel_and_webhook_url(args):
         args.debug = True
 
     if args.channel == "me":
-        webhook_url = config.SLACK_WEBHOOK_URL_ME
         channel = None
+        webhook_url = config.SLACK_WEBHOOK_URL_ME
     elif args.debug:
-        webhook_url = config.SLACK_WEBHOOK_URL
         channel = config.DEBUG_SLACK_ROOM
-    else:
         webhook_url = config.SLACK_WEBHOOK_URL
+    else:
         channel = config.DEFAULT_SLACK_ROOM
+        webhook_url = config.SLACK_WEBHOOK_URL
 
-    if channel:
-        if list(channel)[0] != "#":
-            channel = "#" + channel
+    if channel is not None and list(channel)[0] != "#":
+        channel = "#" + channel
 
     return channel, webhook_url
 

@@ -57,10 +57,10 @@ class SlackSender(object):
             - json(self.json_attachments): The formatted json set in the object
         """
 
-        if not color:
+        if color is None:
             color = self.color
 
-        if not fallback:
+        if fallback is None:
             fallback = title or message
 
         self.json_attachments = {
@@ -78,11 +78,11 @@ class SlackSender(object):
         """Send the Slack notification with the current json_attachments.
         This will update the debug state, channel, and webhook before sending.
         """
-        if not self.user:
+        if self.user is None:
             raise SlackException("Missing user")
-        if not self.webhook_url:
+        if self.webhook_url is None:
             raise SlackException("Missing webhook url")
-        if not self.json_attachments:
+        if self.json_attachments is None:
             raise SlackException("json_attachments not set")
 
         self._json_payload = {
