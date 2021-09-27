@@ -129,7 +129,7 @@ def set_channel_and_webhook_url(args):
         channel = config.DEFAULT_SLACK_ROOM
         webhook_url = config.SLACK_WEBHOOK_URL
 
-    if channel is not None and list(channel)[0] != "#":
+    if channel is not None and not channel.startswith("#"):
         channel = "#" + channel
 
     return channel, webhook_url
